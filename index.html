@@ -10,11 +10,11 @@
     <div id="container">
         <h1>🤖 Decision APP PRO</h1>
         <input id="input" placeholder="np. pizza">
-        <button id="reload" onclick="reload()">Kliknij</button>
+        <button onclick="reload()">Kliknij</button>
         <p id="result"></p>
         <h2>💾 History</h2>
         <ul id="history"></ul>
-        <button id="clear" onclick="clearHistory()">Clear History</button>
+        <button onclick="clearHistory()">Clear History</button>
     </div>
     <script>
         let historyList = JSON.parse(localStorage.getItem("decyzje")) || [];
