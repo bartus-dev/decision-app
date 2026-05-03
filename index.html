@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>APP</title>
+</head>
+<body>
+    <div id="container">
+        <h1>🤖 Decision APP PRO</h1>
+        <input id="input" placeholder="np. pizza">
+        <button id="reload" onclick="reload()">Kliknij</button>
+        <p id="result"></p>
+        <h2>💾 History</h2>
+        <ul id="history"></ul>
+        <button id="clear" onclick="clearHistory()">Clear History</button>
+    </div>
+    <script>
+        let historyList = JSON.parse(localStorage.getItem("decyzje")) || [];
+
+        function saveHistory() {
+            localStorage.setItem("decyzje", JSON.stringify(historyList));
+        }
+
+
+        function reload() {
+            const text = document.getElementById("input").value.trim();
+            const result = document.getElementById("result");
+
+            const decisions = ["DO IT 🟢", "WAIT 🟠", "LEAVE 🔴"];
+            const decision = decisions[Math.floor(Math.random() * decisions.length)];
+            
+            
+            if (!text) {
+                result.innerText = "Musisz coś wpisać";
+            } else {
+                historyList.push({
+                    input: text,
+                    decision: decision
+                });
+                saveHistory();
+                renderHistory();
+
+                result.innerText = decision;
+                document.getElementById("input").value = "";
+            }
+        }
+
+        function renderHistory() {
+            const list = document.getElementById("history");
+            list.innerHTML = "";
+
+            if (historyList.length === 0) {
+                list.innerHTML = "<li>Brak historii</li>";
+                return;
+            }
+
+            historyList.forEach((item, index) => {
+                const li = document.createElement("li");
+                const btn = document.createElement("button");
+
+                const d = item.decision.toUpperCase();
+                btn.innerText = "❌";
+
+                li.innerText = item.input + " → " + d;
+                
+                li.appendChild(btn);
+
+                btn.onclick = function() {
+                    historyList.splice(index, 1)
+                    saveHistory();
+                    renderHistory();
+                };
+
+                list.appendChild(li);
+            });
+        }
+
+        function clearHistory() {
+            historyList = [];
+            saveHistory();
+            renderHistory();
+        }
+        renderHistory();
+
+        document.getElementById("input").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") reload();
+        });
+    </script>
+</body>
+</html>
